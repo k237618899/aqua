@@ -2,6 +2,35 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.0.47a - 2026-09-18
+- **This will do database update**
+- [general] AquaViewer is now bundled into the server jar. The WebUI is served under `/web/` out of the box, no need to copy files into a `web` folder anymore. A `web` folder placed next to the jar still takes priority over the embedded copy.
+- [general] Enable HTTP response compression (gzip) for JSON, XML, HTML and JS payloads. This noticeably reduces transfer time for large responses such as the music list and the DIVA pv_list.
+- [general] Fix static resource fallback so a missing file no longer returns the index page. Previously this broke deep links and asset requests when the UI was served from the jar.
+- [general] Add Caffeine based caching infrastructure
+- [diva] Cache the generated pv_list. The cache is evicted automatically whenever the song list is updated.
+- [diva] Add song management endpoints: single song upsert, listing, `song/batch` batch upsert and `song/batch/validate` dry-run validation before applying an import
+- [diva] Add jacket (album art) support for songs. See migration V246.
+- [diva] Add a difficulty index on the song table to speed up pv_list generation. See migration V245.
+- [diva] Fix creating new settings failing on Sqlite with `NOT NULL constraint failed: property.id`. The column was never auto-assigned, so only rows created by migrations (news, warning) could be updated. See migration V247, which rebuilds the table.
+- [diva] Add skin listing API with skin names, so the WebUI can show a name instead of a raw id
+- [diva] Add store name management support
+- [api] Add `GET api/sega/aime/cards` for the login page card picker. The endpoint exposes access codes, so it only answers clients on the local network and returns 403 otherwise.
+- [api] Resolve a display name for each card from its linked game profile (ONGEKI, Maimai, Chunithm, ...) since a card itself has no name
+- [api] Add `PUT api/sega/aime/rebindAccessCode` to re-assign an access code to an existing card, with format check and duplicate detection
+
+### WebUI changes bundled in this release
+- Auto-detect the API server endpoint from the page address when the UI is served by aqua-server. The login form is prefilled and only falls back to manual input when the API is hosted elsewhere.
+- Add a card picker to the login page using the local network card list
+- Retry failed preloads with backoff instead of leaving tables empty until a manual reload
+- [diva] Add Song management page: single edit plus batch import with pre-import validation, a plain "0.5 - 10.0" star level picker and jacket upload
+- [diva] Add Store Name management page
+- [diva] Add Result Picture generation for recent plays
+- [diva] Skin picker now lists skin names with a preview image instead of asking for a raw id
+- [diva] Show plate names when editing the nameplate
+- [diva] Add Advanced Profile Settings dialog: sort mode, headphone/button/slider volumes and the per-PV skin, module and SE preferences
+- Pin `@angular/cdk`, `@angular/material` and `typescript` to exact versions to keep builds reproducible
+
 ## 0.0.46 - 2023-04-25
 - Add client serial validation option for All.Net PowerOn request. Thanks to Fleming Karlzett!
 - Change Chunithm New userbox API to return sorted list. Thanks to Fleming Karlzett!
