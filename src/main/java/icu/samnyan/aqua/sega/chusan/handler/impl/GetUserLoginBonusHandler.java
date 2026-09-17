@@ -35,7 +35,7 @@ public class GetUserLoginBonusHandler  implements BaseHandler {
 
     @Autowired
     public GetUserLoginBonusHandler(StringMapper mapper,
-                                    @Value("${game.chusan.loginbonus-enable:}") boolean enableLoginBonus,
+                                    @Value("${game.chusan.loginbonus-enable:false}") boolean enableLoginBonus,
                                     UserDataService userDataService,
                                     UserLoginBonusService userLoginBonusService) {
         this.mapper = mapper;

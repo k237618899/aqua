@@ -4,17 +4,23 @@ import icu.samnyan.aqua.api.model.MessageResponse;
 import icu.samnyan.aqua.api.model.ReducedPageResponse;
 import icu.samnyan.aqua.api.model.resp.sega.diva.PvRankRecord;
 import icu.samnyan.aqua.sega.diva.dao.userdata.*;
+import icu.samnyan.aqua.sega.diva.dao.gamedata.DivaPvRepository;
 import icu.samnyan.aqua.sega.diva.model.common.Difficulty;
 import icu.samnyan.aqua.sega.diva.model.common.Edition;
+import icu.samnyan.aqua.sega.diva.model.common.SortMode;
 import icu.samnyan.aqua.sega.diva.model.userdata.*;
 import icu.samnyan.aqua.sega.diva.service.PlayerProfileService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author samnyan (privateamusement@protonmail.com)
@@ -22,6 +28,8 @@ import java.util.*;
 @RestController
 @RequestMapping("api/game/diva")
 public class ApiDivaPlayerDataController {
+
+    private static final Logger logger = LoggerFactory.getLogger(ApiDivaPlayerDataController.class);
 
     private final PlayerProfileService playerProfileService;
 
@@ -32,16 +40,20 @@ public class ApiDivaPlayerDataController {
     private final PlayerModuleRepository playerModuleRepository;
     private final PlayerCustomizeRepository playerCustomizeRepository;
     private final PlayerScreenShotRepository playerScreenShotRepository;
+    private final PlayerInventoryRepository playerInventoryRepository;
+    private final DivaPvRepository divaPvRepository;
 
-    public ApiDivaPlayerDataController(PlayerProfileService playerProfileService, GameSessionRepository gameSessionRepository, PlayLogRepository playLogRepository, PlayerPvRecordRepository playerPvRecordRepository, PlayerPvCustomizeRepository playerPvCustomizeRepository, PlayerModuleRepository playerModuleRepository, PlayerCustomizeRepository playerCustomizeRepository, PlayerScreenShotRepository playerScreenShotRepository) {
+    public ApiDivaPlayerDataController(PlayerProfileService playerProfileService, GameSessionRepository gameSessionRepository, PlayLogRepository playLogRepository, PlayerPvRecordRepository playerPvRecordRepository, PlayerPvCustomizeRepository playerPvCustomizeRepository, PlayerModuleRepository playerModuleRepository, PlayerCustomizeRepository playerCustomizeRepository, PlayerScreenShotRepository playerScreenShotRepository, PlayerInventoryRepository playerInventoryRepository, DivaPvRepository divaPvRepository) {
         this.playerProfileService = playerProfileService;
         this.gameSessionRepository = gameSessionRepository;
         this.playLogRepository = playLogRepository;
         this.playerPvRecordRepository = playerPvRecordRepository;
         this.playerPvCustomizeRepository = playerPvCustomizeRepository;
         this.playerModuleRepository = playerModuleRepository;
+        this.divaPvRepository = divaPvRepository;
         this.playerCustomizeRepository = playerCustomizeRepository;
         this.playerScreenShotRepository = playerScreenShotRepository;
+        this.playerInventoryRepository = playerInventoryRepository;
     }
 
     @PostMapping("forceUnlock")
@@ -59,6 +71,39 @@ public class ApiDivaPlayerDataController {
     @GetMapping("playerInfo")
     public Optional<PlayerProfile> getPlayerInfo(@RequestParam int pdId) {
         return playerProfileService.findByPdId(pdId);
+    }
+
+    @GetMapping("playerInfo/search")
+    public ReducedPageResponse<PlayerProfile> searchPlayerInfo(@RequestParam(required = false, defaultValue = "") String q,
+                                                               @RequestParam(required = false, defaultValue = "0") int page,
+                                                               @RequestParam(required = false, defaultValue = "20") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        if (q == null || q.isBlank()) {
+            Page<PlayerProfile> allProfiles = playerProfileService.findAll(pageable);
+            return new ReducedPageResponse<>(allProfiles.getContent(), allProfiles.getPageable().getPageNumber(), allProfiles.getTotalPages(), allProfiles.getTotalElements());
+        }
+
+        String keyword = q.trim();
+        if (keyword.matches("^\\d+$")) {
+            Optional<PlayerProfile> exact = playerProfileService.findByPdId(Integer.parseInt(keyword));
+            List<PlayerProfile> content = exact.map(List::of).orElseGet(Collections::emptyList);
+            return new ReducedPageResponse<>(content, 0, content.isEmpty() ? 0 : 1, (long) content.size());
+        }
+
+        Page<PlayerProfile> profiles = playerProfileService.findByPlayerName(keyword, pageable);
+        return new ReducedPageResponse<>(profiles.getContent(), profiles.getPageable().getPageNumber(), profiles.getTotalPages(), profiles.getTotalElements());
+    }
+
+    @GetMapping("playerInfo/plateOptions")
+    public List<Integer> getPlayerPlateOptions(@RequestParam int pdId) {
+        return playerInventoryRepository.findByPdId_PdIdAndType(pdId, "PLATE")
+                .stream()
+                .map(PlayerInventory::getValue)
+                .filter(x -> x != null && x.matches("^-?\\d+$"))
+                .map(Integer::parseInt)
+                .distinct()
+                .sorted()
+                .collect(Collectors.toList());
     }
 
     @GetMapping("playerInfo/rival")
@@ -109,9 +154,9 @@ public class ApiDivaPlayerDataController {
 
     @PutMapping("playerInfo/plate")
     public PlayerProfile updatePlate(@RequestBody Map<String, Object> request) {
-        PlayerProfile profile = playerProfileService.findByPdId((Integer) request.get("pdId")).orElseThrow();
-        profile.setPlateId((Integer) request.get("plateId"));
-        profile.setPlateEffectId((Integer) request.get("plateEffectId"));
+        PlayerProfile profile = playerProfileService.findByPdId(((Number) request.get("pdId")).intValue()).orElseThrow();
+        profile.setPlateId(((Number) request.get("plateId")).intValue());
+        profile.setPlateEffectId(((Number) request.get("plateEffectId")).intValue());
         return playerProfileService.save(profile);
     }
 
@@ -175,12 +220,67 @@ public class ApiDivaPlayerDataController {
         return playerProfileService.save(profile);
     }
 
+    @PutMapping("playerInfo/settings")
+    public PlayerProfile updateSettings(@RequestBody Map<String, Object> request) {
+        PlayerProfile profile = playerProfileService.findByPdId(((Number) request.get("pdId")).intValue()).orElseThrow();
+
+        if (request.containsKey("playerName")) profile.setPlayerName((String) request.get("playerName"));
+        if (request.containsKey("title")) profile.setLevelTitle((String) request.get("title"));
+        if (request.containsKey("plateId")) profile.setPlateId(((Number) request.get("plateId")).intValue());
+        if (request.containsKey("plateEffectId")) profile.setPlateEffectId(((Number) request.get("plateEffectId")).intValue());
+        if (request.containsKey("commonSkin")) profile.setCommonSkin(((Number) request.get("commonSkin")).intValue());
+
+        if (request.containsKey("preferPerPvModule")) profile.setPreferPerPvModule((Boolean) request.get("preferPerPvModule"));
+        if (request.containsKey("preferCommonModule")) profile.setPreferCommonModule((Boolean) request.get("preferCommonModule"));
+        if (request.containsKey("usePerPvSkin")) profile.setUsePerPvSkin((Boolean) request.get("usePerPvSkin"));
+        if (request.containsKey("usePerPvButtonSe")) profile.setUsePerPvButtonSe((Boolean) request.get("usePerPvButtonSe"));
+        if (request.containsKey("usePerPvSliderSe")) profile.setUsePerPvSliderSe((Boolean) request.get("usePerPvSliderSe"));
+        if (request.containsKey("usePerPvChainSliderSe")) profile.setUsePerPvChainSliderSe((Boolean) request.get("usePerPvChainSliderSe"));
+        if (request.containsKey("usePerPvTouchSliderSe")) profile.setUsePerPvTouchSliderSe((Boolean) request.get("usePerPvTouchSliderSe"));
+
+        if (request.containsKey("headphoneVolume")) profile.setHeadphoneVolume(((Number) request.get("headphoneVolume")).intValue());
+        if (request.containsKey("buttonSeOn")) profile.setButtonSeOn((Boolean) request.get("buttonSeOn"));
+        if (request.containsKey("buttonSeVolume")) profile.setButtonSeVolume(((Number) request.get("buttonSeVolume")).intValue());
+        if (request.containsKey("sliderSeVolume")) profile.setSliderSeVolume(((Number) request.get("sliderSeVolume")).intValue());
+        if (request.containsKey("buttonSe")) profile.setButtonSe(((Number) request.get("buttonSe")).intValue());
+        if (request.containsKey("slideSe")) profile.setSlideSe(((Number) request.get("slideSe")).intValue());
+        if (request.containsKey("chainSlideSe")) profile.setChainSlideSe(((Number) request.get("chainSlideSe")).intValue());
+        if (request.containsKey("sliderTouchSe")) profile.setSliderTouchSe(((Number) request.get("sliderTouchSe")).intValue());
+
+        if (request.containsKey("sortMode")) profile.setSortMode(SortMode.fromValue(((Number) request.get("sortMode")).intValue()));
+
+        if (request.containsKey("showInterimRanking")) profile.setShowInterimRanking((Boolean) request.get("showInterimRanking"));
+        if (request.containsKey("showClearStatus")) profile.setShowClearStatus((Boolean) request.get("showClearStatus"));
+        if (request.containsKey("showGreatBorder")) profile.setShowGreatBorder((Boolean) request.get("showGreatBorder"));
+        if (request.containsKey("showExcellentBorder")) profile.setShowExcellentBorder((Boolean) request.get("showExcellentBorder"));
+        if (request.containsKey("showRivalBorder")) profile.setShowRivalBorder((Boolean) request.get("showRivalBorder"));
+        if (request.containsKey("showRgoSetting")) profile.setShowRgoSetting((Boolean) request.get("showRgoSetting"));
+
+        return playerProfileService.save(profile);
+    }
+
     @GetMapping("playLog")
     public ReducedPageResponse<PlayLog> getPlayLogs(@RequestParam int pdId,
                                                     @RequestParam(required = false, defaultValue = "0") int page,
                                                     @RequestParam(required = false, defaultValue = "10") int size) {
         Page<PlayLog> playLogs = playLogRepository.findByPdId_PdIdOrderByDateTimeDesc(pdId, PageRequest.of(page, size));
         return new ReducedPageResponse<>(playLogs.getContent(), playLogs.getPageable().getPageNumber(), playLogs.getTotalPages(), playLogs.getTotalElements());
+    }
+
+    // Returns jacket image (base64 data URL) for a song, used by the result-picture export.
+    @GetMapping("pv/{pvId}")
+    public Map<String, Object> getPv(@PathVariable int pvId) {
+        Map<String, Object> result = new HashMap<>();
+        result.put("pvId", pvId);
+        result.put("jacket", null);
+        try {
+            divaPvRepository.findById(pvId).ifPresent(pv -> result.put("jacket", pv.getJacket()));
+        } catch (Exception e) {
+            // A database that predates the jacket column must not break the viewer;
+            // the client simply falls back to its procedural cover.
+            logger.warn("Unable to read jacket for pv {}: {}", pvId, e.getMessage());
+        }
+        return result;
     }
 
     /**

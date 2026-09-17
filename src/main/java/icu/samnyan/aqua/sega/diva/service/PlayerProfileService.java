@@ -3,6 +3,8 @@ package icu.samnyan.aqua.sega.diva.service;
 import icu.samnyan.aqua.sega.diva.dao.userdata.PlayerProfileRepository;
 import icu.samnyan.aqua.sega.diva.model.request.card.RegistrationRequest;
 import icu.samnyan.aqua.sega.diva.model.userdata.PlayerProfile;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -33,5 +35,13 @@ public class PlayerProfileService {
 
     public PlayerProfile save(PlayerProfile profile) {
         return playerProfileRepository.save(profile);
+    }
+
+    public Page<PlayerProfile> findAll(Pageable pageable) {
+        return playerProfileRepository.findAllByOrderByPdIdAsc(pageable);
+    }
+
+    public Page<PlayerProfile> findByPlayerName(String playerName, Pageable pageable) {
+        return playerProfileRepository.findByPlayerNameContainingIgnoreCaseOrderByPdIdAsc(playerName, pageable);
     }
 }

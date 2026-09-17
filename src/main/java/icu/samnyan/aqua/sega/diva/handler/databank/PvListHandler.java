@@ -1,20 +1,14 @@
 package icu.samnyan.aqua.sega.diva.handler.databank;
 
-import icu.samnyan.aqua.sega.diva.dao.gamedata.PvEntryRepository;
 import icu.samnyan.aqua.sega.diva.handler.BaseHandler;
-import icu.samnyan.aqua.sega.diva.model.common.Difficulty;
-import icu.samnyan.aqua.sega.diva.model.gamedata.PvEntry;
 import icu.samnyan.aqua.sega.diva.model.request.BaseRequest;
 import icu.samnyan.aqua.sega.diva.model.response.databank.PvListResponse;
 import icu.samnyan.aqua.sega.diva.util.DivaMapper;
-import icu.samnyan.aqua.sega.util.URIEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 /**
  * @author samnyan (privateamusement@protonmail.com)
@@ -22,59 +16,41 @@ import java.util.List;
 @Component
 public class PvListHandler extends BaseHandler {
 
-    private static final Logger logger = LoggerFactory.getLogger(BannerDataHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(PvListHandler.class);
 
-    private final PvEntryRepository pvEntryRepository;
+    private final PvListCacheService pvListCacheService;
 
-    private final DateTimeFormatter df;
-
-    public PvListHandler(DivaMapper mapper, PvEntryRepository pvEntryRepository) {
+    public PvListHandler(DivaMapper mapper, PvListCacheService pvListCacheService) {
         super(mapper);
-        this.pvEntryRepository = pvEntryRepository;
-        this.df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        this.pvListCacheService = pvListCacheService;
     }
 
     public String handle(BaseRequest request) {
-        StringBuilder sb = new StringBuilder();
+        long start = System.currentTimeMillis();
 
-        List<PvEntry> easyList = pvEntryRepository.findByDifficulty(Difficulty.EASY);
-        List<PvEntry> normalList = pvEntryRepository.findByDifficulty(Difficulty.NORMAL);
-        List<PvEntry> hardList = pvEntryRepository.findByDifficulty(Difficulty.HARD);
-        List<PvEntry> extremeList = pvEntryRepository.findByDifficulty(Difficulty.EXTREME);
-
-        sb.append(URIEncoder.encode(difficultyString(easyList))).append(",");
-        sb.append(URIEncoder.encode(difficultyString(normalList))).append(",");
-        sb.append(URIEncoder.encode(difficultyString(hardList))).append(",");
-        sb.append(URIEncoder.encode(difficultyString(extremeList))).append(",");
-        sb.append("%2A%2A%2A");
+        // A2: the expensive content (4 difficulty queries + URI encoding) is built
+        // once and cached; the per-request fields (req_id, timestamp) are added here
+        // so they stay fresh for every cabinet.
+        PvListContent content = pvListCacheService.getPvListContent();
 
         PvListResponse response = new PvListResponse(
                 request.getCmd(),
                 request.getReq_id(),
                 "ok",
                 LocalDateTime.now(),
-                sb.toString());
+                content.getContent());
 
         String resp = this.build(mapper.toMap(response));
-        logger.info("Response: {}", resp);
+
+        long cost = System.currentTimeMillis() - start;
+
+        // A1: never log the full response body (it can be huge at 900+ songs and
+        // burns disk I/O + GC). Log a compact, searchable summary instead.
+        logger.info("pv_list response: reqId={}, length={}, counts(easy/normal/hard/extreme)={}/{}/{}/{}, cost={}ms",
+                request.getReq_id(), resp.length(),
+                content.getEasyCount(), content.getNormalCount(), content.getHardCount(), content.getExtremeCount(),
+                cost);
 
         return resp;
-    }
-
-    private String entryString(PvEntry entry) {
-        return "" + entry.getPvId() + "," +
-                entry.getVersion() + "," +
-                entry.getEdition().getValue() + "," +
-                df.format(entry.getDemoStart()) + "," +
-                df.format(entry.getDemoEnd()) + "," +
-                df.format(entry.getPlayableStart()) + "," +
-                df.format(entry.getPlayableEnd());
-    }
-
-    private String difficultyString(List<PvEntry> list) {
-        StringBuilder sb = new StringBuilder();
-        list.forEach(x -> sb.append(URIEncoder.encode(entryString(x))).append(","));
-        if (sb.length() > 0) sb.deleteCharAt(sb.length() - 1);
-        return sb.toString();
     }
 }

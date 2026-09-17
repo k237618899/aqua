@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -25,22 +26,37 @@ public class WebConfig implements WebMvcConfigurer {
         if (AQUAVIEWER_ENABLED) {
             // Static assets (images), this priority must be higher than routes
             registry.addResourceHandler("/web/assets/**")
-                    .addResourceLocations("file:web/assets/")
+                    .addResourceLocations("classpath:/web/assets/", "file:web/assets/")
                     .setCachePeriod(10)
                     .resourceChain(true)
                     .addResolver(new PathResourceResolver());
 
             // For angularjs html5 routes
             registry.addResourceHandler("/web/**", "/web/", "/web")
-                    .addResourceLocations("file:web/")
+                    .addResourceLocations("classpath:/web/", "file:web/")
                     .setCachePeriod(10)
                     .resourceChain(true)
                     .addResolver(new PathResourceResolver() {
                         @Override
                         protected Resource getResource(String resourcePath, Resource location) throws IOException {
                             Resource requestedResource = location.createRelative(resourcePath);
-                            return requestedResource.exists() && requestedResource.isReadable() ? requestedResource
-                                    : new FileSystemResource("web/index.html");
+                            if (requestedResource.exists() && requestedResource.isReadable()) {
+                                return requestedResource;
+                            }
+
+                            // If this looks like a static file request, do not fallback to index here.
+                            // Returning null allows the next resource location (classpath) to be checked.
+                            if (resourcePath.contains(".")) {
+                                return null;
+                            }
+
+                            Resource fileIndex = new FileSystemResource("web/index.html");
+                            if (fileIndex.exists() && fileIndex.isReadable()) {
+                                return fileIndex;
+                            }
+
+                            Resource classpathIndex = new ClassPathResource("web/index.html");
+                            return classpathIndex.exists() && classpathIndex.isReadable() ? classpathIndex : null;
                         }
                     });
         }

@@ -1,6 +1,8 @@
 import java.time.Instant
 import java.time.format.DateTimeFormatter
 import java.time.ZoneId
+import org.gradle.api.GradleException
+import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 plugins {
     java
@@ -24,6 +26,8 @@ dependencies {
     }
     implementation("org.springframework.boot:spring-boot-starter-jetty")
     implementation("io.netty:netty-all")
+    implementation("org.springframework.boot:spring-boot-starter-cache")
+    implementation("com.github.ben-manes.caffeine:caffeine:3.1.8")
     implementation("org.apache.commons:commons-lang3")
     implementation("org.apache.httpcomponents:httpclient")
     implementation("org.flywaydb:flyway-core")
@@ -47,7 +51,7 @@ dependencies {
 }
 
 group = "icu.samnya"
-version = "0.0.46-RELEASE"
+version = "0.0.47a"
 description = "Aqua Server"
 java.sourceCompatibility = JavaVersion.VERSION_17
 
@@ -69,4 +73,48 @@ tasks.withType<JavaCompile>() {
 
 tasks.withType<Javadoc>() {
     options.encoding = "UTF-8"
+}
+
+val aquaViewerDistDir = file("../aqua-viewer/dist/aqua-viewer")
+val embeddedWebDir = file("src/main/resources/web")
+
+val syncAquaViewerUi by tasks.registering(Copy::class) {
+    group = "build"
+    description = "Copy AquaViewer build output into embedded web resources for jar packaging."
+
+    doFirst {
+        if (!aquaViewerDistDir.exists()) {
+            throw GradleException("AquaViewer dist not found at ${aquaViewerDistDir.path}. Run npm run build in aqua-viewer first.")
+        }
+        delete(embeddedWebDir)
+    }
+
+    from(aquaViewerDistDir)
+    into(embeddedWebDir)
+    includeEmptyDirs = false
+
+    doLast {
+        val embeddedIndex = file("src/main/resources/web/index.html")
+        if (embeddedIndex.exists()) {
+            val content = embeddedIndex.readText(Charsets.UTF_8)
+            if (content.contains("<base href=\"/\">")) {
+                embeddedIndex.writeText(content.replace("<base href=\"/\">", "<base href=\"/web/\">"), Charsets.UTF_8)
+            }
+        }
+    }
+}
+
+tasks.named("processResources") {
+    dependsOn(syncAquaViewerUi)
+}
+
+tasks.register("bootJarWithUi") {
+    group = "build"
+    description = "Build a single executable jar with embedded AquaViewer UI."
+    dependsOn(syncAquaViewerUi)
+    dependsOn(tasks.named("bootJar"))
+}
+
+tasks.named<BootJar>("bootJar") {
+    dependsOn(syncAquaViewerUi)
 }

@@ -48,7 +48,7 @@ public class GameLoginHandler implements BaseHandler {
     private final UserLoginBonusService userLoginBonusService;
 
     public GameLoginHandler(StringMapper mapper,
-                            @Value("${game.chusan.loginbonus-enable:}") boolean enableLoginBonus,
+                            @Value("${game.chusan.loginbonus-enable:false}") boolean enableLoginBonus,
                             UserDataService userDataService,
                             UserItemService userItemService,
                             GameLoginBonusPresetService gameLoginBonusPresetService,

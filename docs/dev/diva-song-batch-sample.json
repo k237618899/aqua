@@ -1,0 +1,506 @@
+[
+  {
+    "pvId": 23,
+    "bpm": 180,
+    "songName": "Dear cocoa girls",
+    "songNameEng": "Dear cocoa girls",
+    "songNameReading": "でぃあここあがーるず",
+    "arranger": "神前 暁",
+    "lyrics": "畑 亜貴",
+    "music": "神前 暁",
+    "performerNumber": 1,
+    "entries": [
+      {
+        "difficulty": 0,
+        "version": 1,
+        "edition": 0,
+        "level": "PV_LV_03_5",
+        "demoStart": "2000-01-01T15:00:00",
+        "demoEnd": "2029-01-01T15:00:00",
+        "playableStart": "2009-01-01T15:00:00",
+        "playableEnd": "2029-01-01T15:00:00"
+      },
+      {
+        "difficulty": 1,
+        "version": 1,
+        "edition": 0,
+        "level": "PV_LV_04_0",
+        "demoStart": "2000-01-01T15:00:00",
+        "demoEnd": "2029-01-01T15:00:00",
+        "playableStart": "2009-01-01T15:00:00",
+        "playableEnd": "2029-01-01T15:00:00"
+      },
+      {
+        "difficulty": 3,
+        "version": 1,
+        "edition": 0,
+        "level": "PV_LV_06_5",
+        "demoStart": "2000-01-01T15:00:00",
+        "demoEnd": "2029-01-01T15:00:00",
+        "playableStart": "2009-01-01T15:00:00",
+        "playableEnd": "2029-01-01T15:00:00"
+      },
+      {
+        "difficulty": 3,
+        "version": 1,
+        "edition": 1,
+        "level": "PV_LV_07_5",
+        "demoStart": "2000-01-01T15:00:00",
+        "demoEnd": "2029-01-01T15:00:00",
+        "playableStart": "2016-09-15T15:00:00",
+        "playableEnd": "2029-01-01T15:00:00"
+      },
+      {
+        "difficulty": 2,
+        "version": 1,
+        "edition": 0,
+        "level": "PV_LV_05_0",
+        "demoStart": "2000-01-01T15:00:00",
+        "demoEnd": "2029-01-01T15:00:00",
+        "playableStart": "2009-01-01T15:00:00",
+        "playableEnd": "2029-01-01T15:00:00"
+      }
+    ]
+  },
+  {
+    "pvId": 27,
+    "bpm": 119,
+    "songName": "Ievan Polkka",
+    "songNameEng": "Ievan Polkka",
+    "songNameReading": "いえばんぽるっか",
+    "arranger": "Otomania",
+    "lyrics": null,
+    "music": "フィンランド民謡",
+    "performerNumber": 1,
+    "entries": [
+      {
+        "difficulty": 0,
+        "version": 1,
+        "edition": 0,
+        "level": "PV_LV_03_0",
+        "demoStart": "2000-01-01T15:00:00",
+        "demoEnd": "2029-01-01T15:00:00",
+        "playableStart": "2009-01-01T15:00:00",
+        "playableEnd": "2029-01-01T15:00:00"
+      },
+      {
+        "difficulty": 1,
+        "version": 1,
+        "edition": 0,
+        "level": "PV_LV_05_5",
+        "demoStart": "2000-01-01T15:00:00",
+        "demoEnd": "2029-01-01T15:00:00",
+        "playableStart": "2009-01-01T15:00:00",
+        "playableEnd": "2029-01-01T15:00:00"
+      },
+      {
+        "difficulty": 3,
+        "version": 1,
+        "edition": 0,
+        "level": "PV_LV_08_0",
+        "demoStart": "2000-01-01T15:00:00",
+        "demoEnd": "2029-01-01T15:00:00",
+        "playableStart": "2009-01-01T15:00:00",
+        "playableEnd": "2029-01-01T15:00:00"
+      },
+      {
+        "difficulty": 3,
+        "version": 1,
+        "edition": 1,
+        "level": "PV_LV_09_5",
+        "demoStart": "2000-01-01T15:00:00",
+        "demoEnd": "2029-01-01T15:00:00",
+        "playableStart": "2016-04-07T15:00:00",
+        "playableEnd": "2029-01-01T15:00:00"
+      },
+      {
+        "difficulty": 2,
+        "version": 1,
+        "edition": 0,
+        "level": "PV_LV_07_0",
+        "demoStart": "2000-01-01T15:00:00",
+        "demoEnd": "2029-01-01T15:00:00",
+        "playableStart": "2009-01-01T15:00:00",
+        "playableEnd": "2029-01-01T15:00:00"
+      }
+    ]
+  },
+  {
+    "pvId": 30,
+    "bpm": 150,
+    "songName": "えれくとりっく・えんじぇぅ",
+    "songNameEng": "Electric Angel",
+    "songNameReading": "えれくとりっくえんじぇぅ",
+    "arranger": "ヤスオ",
+    "lyrics": "ヤスオ",
+    "music": "ヤスオ",
+    "performerNumber": 1,
+    "entries": [
+      {
+        "difficulty": 0,
+        "version": 1,
+        "edition": 0,
+        "level": "PV_LV_01_5",
+        "demoStart": "2000-01-01T15:00:00",
+        "demoEnd": "2029-01-01T15:00:00",
+        "playableStart": "2009-01-01T15:00:00",
+        "playableEnd": "2029-01-01T15:00:00"
+      },
+      {
+        "difficulty": 1,
+        "version": 1,
+        "edition": 0,
+        "level": "PV_LV_03_5",
+        "demoStart": "2000-01-01T15:00:00",
+        "demoEnd": "2029-01-01T15:00:00",
+        "playableStart": "2009-01-01T15:00:00",
+        "playableEnd": "2029-01-01T15:00:00"
+      },
+      {
+        "difficulty": 3,
+        "version": 1,
+        "edition": 0,
+        "level": "PV_LV_07_0",
+        "demoStart": "2000-01-01T15:00:00",
+        "demoEnd": "2029-01-01T15:00:00",
+        "playableStart": "2009-01-01T15:00:00",
+        "playableEnd": "2029-01-01T15:00:00"
+      },
+      {
+        "difficulty": 3,
+        "version": 1,
+        "edition": 1,
+        "level": "PV_LV_08_5",
+        "demoStart": "2000-01-01T15:00:00",
+        "demoEnd": "2029-01-01T15:00:00",
+        "playableStart": "2015-11-26T15:00:00",
+        "playableEnd": "2029-01-01T15:00:00"
+      },
+      {
+        "difficulty": 2,
+        "version": 1,
+        "edition": 0,
+        "level": "PV_LV_05_5",
+        "demoStart": "2000-01-01T15:00:00",
+        "demoEnd": "2029-01-01T15:00:00",
+        "playableStart": "2009-01-01T15:00:00",
+        "playableEnd": "2029-01-01T15:00:00"
+      }
+    ]
+  },
+  {
+    "pvId": 41,
+    "bpm": 185,
+    "songName": "カラフル×メロディ",
+    "songNameEng": "Colorful×Melody",
+    "songNameReading": "からふるめろでぃ",
+    "arranger": "OSTER project",
+    "lyrics": "minato（流星P）",
+    "music": "doriko",
+    "performerNumber": 2,
+    "entries": [
+      {
+        "difficulty": 0,
+        "version": 1,
+        "edition": 0,
+        "level": "PV_LV_03_5",
+        "demoStart": "2000-01-01T15:00:00",
+        "demoEnd": "2029-01-01T15:00:00",
+        "playableStart": "2011-01-27T15:00:00",
+        "playableEnd": "2029-01-01T15:00:00"
+      },
+      {
+        "difficulty": 1,
+        "version": 1,
+        "edition": 0,
+        "level": "PV_LV_05_0",
+        "demoStart": "2000-01-01T15:00:00",
+        "demoEnd": "2029-01-01T15:00:00",
+        "playableStart": "2011-01-27T15:00:00",
+        "playableEnd": "2029-01-01T15:00:00"
+      },
+      {
+        "difficulty": 3,
+        "version": 1,
+        "edition": 0,
+        "level": "PV_LV_08_0",
+        "demoStart": "2000-01-01T15:00:00",
+        "demoEnd": "2029-01-01T15:00:00",
+        "playableStart": "2011-01-27T15:00:00",
+        "playableEnd": "2029-01-01T15:00:00"
+      },
+      {
+        "difficulty": 3,
+        "version": 1,
+        "edition": 1,
+        "level": "PV_LV_08_0",
+        "demoStart": "2000-01-01T15:00:00",
+        "demoEnd": "2029-01-01T15:00:00",
+        "playableStart": "2017-02-09T15:00:00",
+        "playableEnd": "2029-01-01T15:00:00"
+      },
+      {
+        "difficulty": 2,
+        "version": 1,
+        "edition": 0,
+        "level": "PV_LV_06_0",
+        "demoStart": "2000-01-01T15:00:00",
+        "demoEnd": "2029-01-01T15:00:00",
+        "playableStart": "2011-01-27T15:00:00",
+        "playableEnd": "2029-01-01T15:00:00"
+      }
+    ]
+  },
+  {
+    "pvId": 42,
+    "bpm": 200,
+    "songName": "初音ミクの激唱",
+    "songNameEng": "The Intense Voice of Hatsune Miku",
+    "songNameReading": "はつねみくのげきしょう",
+    "arranger": "Storyteller",
+    "lyrics": "Storyteller",
+    "music": "Storyteller",
+    "performerNumber": 1,
+    "entries": [
+      {
+        "difficulty": 0,
+        "version": 1,
+        "edition": 0,
+        "level": "PV_LV_03_0",
+        "demoStart": "2000-01-01T15:00:00",
+        "demoEnd": "2029-01-01T15:00:00",
+        "playableStart": "2012-02-23T15:00:00",
+        "playableEnd": "2029-01-01T15:00:00"
+      },
+      {
+        "difficulty": 1,
+        "version": 1,
+        "edition": 0,
+        "level": "PV_LV_06_0",
+        "demoStart": "2000-01-01T15:00:00",
+        "demoEnd": "2029-01-01T15:00:00",
+        "playableStart": "2012-02-23T15:00:00",
+        "playableEnd": "2029-01-01T15:00:00"
+      },
+      {
+        "difficulty": 3,
+        "version": 1,
+        "edition": 0,
+        "level": "PV_LV_10_0",
+        "demoStart": "2000-01-01T15:00:00",
+        "demoEnd": "2029-01-01T15:00:00",
+        "playableStart": "2012-02-23T15:00:00",
+        "playableEnd": "2029-01-01T15:00:00"
+      },
+      {
+        "difficulty": 3,
+        "version": 1,
+        "edition": 1,
+        "level": "PV_LV_10_0",
+        "demoStart": "2000-01-01T15:00:00",
+        "demoEnd": "2029-01-01T15:00:00",
+        "playableStart": "2018-03-20T15:00:00",
+        "playableEnd": "2029-01-01T15:00:00"
+      },
+      {
+        "difficulty": 2,
+        "version": 1,
+        "edition": 0,
+        "level": "PV_LV_08_0",
+        "demoStart": "2000-01-01T15:00:00",
+        "demoEnd": "2029-01-01T15:00:00",
+        "playableStart": "2012-02-23T15:00:00",
+        "playableEnd": "2029-01-01T15:00:00"
+      }
+    ]
+  },
+  {
+    "pvId": 44,
+    "bpm": 150,
+    "songName": "magnet",
+    "songNameEng": "magnet",
+    "songNameReading": "まぐねっと",
+    "arranger": "minato（流星P）",
+    "lyrics": "minato（流星P）",
+    "music": "minato（流星P）",
+    "performerNumber": 2,
+    "entries": [
+      {
+        "difficulty": 0,
+        "version": 1,
+        "edition": 0,
+        "level": "PV_LV_04_5",
+        "demoStart": "2000-01-01T15:00:00",
+        "demoEnd": "2029-01-01T15:00:00",
+        "playableStart": "2011-08-04T15:00:00",
+        "playableEnd": "2029-01-01T15:00:00"
+      },
+      {
+        "difficulty": 1,
+        "version": 1,
+        "edition": 0,
+        "level": "PV_LV_05_5",
+        "demoStart": "2000-01-01T15:00:00",
+        "demoEnd": "2029-01-01T15:00:00",
+        "playableStart": "2011-08-04T15:00:00",
+        "playableEnd": "2029-01-01T15:00:00"
+      },
+      {
+        "difficulty": 3,
+        "version": 1,
+        "edition": 0,
+        "level": "PV_LV_08_0",
+        "demoStart": "2000-01-01T15:00:00",
+        "demoEnd": "2029-01-01T15:00:00",
+        "playableStart": "2011-08-04T15:00:00",
+        "playableEnd": "2029-01-01T15:00:00"
+      },
+      {
+        "difficulty": 3,
+        "version": 1,
+        "edition": 1,
+        "level": "PV_LV_08_5",
+        "demoStart": "2000-01-01T15:00:00",
+        "demoEnd": "2029-01-01T15:00:00",
+        "playableStart": "2017-10-25T15:00:00",
+        "playableEnd": "2029-01-01T15:00:00"
+      },
+      {
+        "difficulty": 2,
+        "version": 1,
+        "edition": 0,
+        "level": "PV_LV_06_5",
+        "demoStart": "2000-01-01T15:00:00",
+        "demoEnd": "2029-01-01T15:00:00",
+        "playableStart": "2011-08-04T15:00:00",
+        "playableEnd": "2029-01-01T15:00:00"
+      }
+    ]
+  },
+  {
+    "pvId": 46,
+    "bpm": 98,
+    "songName": "from Y to Y",
+    "songNameEng": "from Y to Y",
+    "songNameReading": "ふろむわいとぅわい",
+    "arranger": "ジミーサムP",
+    "lyrics": "ジミーサムP",
+    "music": "ジミーサムP",
+    "performerNumber": 1,
+    "entries": [
+      {
+        "difficulty": 0,
+        "version": 1,
+        "edition": 0,
+        "level": "PV_LV_03_0",
+        "demoStart": "2000-01-01T15:00:00",
+        "demoEnd": "2029-01-01T15:00:00",
+        "playableStart": "2012-03-27T15:00:00",
+        "playableEnd": "2029-01-01T15:00:00"
+      },
+      {
+        "difficulty": 1,
+        "version": 1,
+        "edition": 0,
+        "level": "PV_LV_04_0",
+        "demoStart": "2000-01-01T15:00:00",
+        "demoEnd": "2029-01-01T15:00:00",
+        "playableStart": "2012-03-27T15:00:00",
+        "playableEnd": "2029-01-01T15:00:00"
+      },
+      {
+        "difficulty": 3,
+        "version": 1,
+        "edition": 0,
+        "level": "PV_LV_07_0",
+        "demoStart": "2000-01-01T15:00:00",
+        "demoEnd": "2029-01-01T15:00:00",
+        "playableStart": "2012-03-27T15:00:00",
+        "playableEnd": "2029-01-01T15:00:00"
+      },
+      {
+        "difficulty": 3,
+        "version": 1,
+        "edition": 1,
+        "level": "PV_LV_07_5",
+        "demoStart": "2000-01-01T15:00:00",
+        "demoEnd": "2029-01-01T15:00:00",
+        "playableStart": "2016-06-09T15:00:00",
+        "playableEnd": "2029-01-01T15:00:00"
+      },
+      {
+        "difficulty": 2,
+        "version": 1,
+        "edition": 0,
+        "level": "PV_LV_05_5",
+        "demoStart": "2000-01-01T15:00:00",
+        "demoEnd": "2029-01-01T15:00:00",
+        "playableStart": "2012-03-27T15:00:00",
+        "playableEnd": "2029-01-01T15:00:00"
+      }
+    ]
+  },
+  {
+    "pvId": 48,
+    "bpm": 136,
+    "songName": "愛言葉",
+    "songNameEng": "Aikotoba",
+    "songNameReading": "あいことば",
+    "arranger": "DECO*27",
+    "lyrics": "DECO*27",
+    "music": "DECO*27",
+    "performerNumber": 1,
+    "entries": [
+      {
+        "difficulty": 0,
+        "version": 1,
+        "edition": 0,
+        "level": "PV_LV_01_0",
+        "demoStart": "2000-01-01T15:00:00",
+        "demoEnd": "2029-01-01T15:00:00",
+        "playableStart": "2011-02-01T15:00:00",
+        "playableEnd": "2029-01-01T15:00:00"
+      },
+      {
+        "difficulty": 1,
+        "version": 1,
+        "edition": 0,
+        "level": "PV_LV_03_0",
+        "demoStart": "2000-01-01T15:00:00",
+        "demoEnd": "2029-01-01T15:00:00",
+        "playableStart": "2011-02-01T15:00:00",
+        "playableEnd": "2029-01-01T15:00:00"
+      },
+      {
+        "difficulty": 3,
+        "version": 1,
+        "edition": 0,
+        "level": "PV_LV_07_0",
+        "demoStart": "2000-01-01T15:00:00",
+        "demoEnd": "2029-01-01T15:00:00",
+        "playableStart": "2011-02-01T15:00:00",
+        "playableEnd": "2029-01-01T15:00:00"
+      },
+      {
+        "difficulty": 3,
+        "version": 1,
+        "edition": 1,
+        "level": "PV_LV_08_5",
+        "demoStart": "2000-01-01T15:00:00",
+        "demoEnd": "2029-01-01T15:00:00",
+        "playableStart": "2018-03-20T15:00:00",
+        "playableEnd": "2029-01-01T15:00:00"
+      },
+      {
+        "difficulty": 2,
+        "version": 1,
+        "edition": 0,
+        "level": "PV_LV_05_0",
+        "demoStart": "2000-01-01T15:00:00",
+        "demoEnd": "2029-01-01T15:00:00",
+        "playableStart": "2011-02-01T15:00:00",
+        "playableEnd": "2029-01-01T15:00:00"
+      }
+    ]
+  }
+]

@@ -39,6 +39,9 @@ public class Pv implements Serializable
 
     private Integer performerNumber;
 
+    @Column(columnDefinition = "TEXT")
+    private String jacket;
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "pv")
     @MapKey(name = "diff")
     private Map<String, Difficulty> difficulty;
