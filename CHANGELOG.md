@@ -4,7 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## 0.0.47a - 2026-09-18
 - **This will do database update**
-- [general] AquaViewer is now bundled into the server jar. The WebUI is served under `/web/` out of the box, no need to copy files into a `web` folder anymore. A `web` folder placed next to the jar still takes priority over the embedded copy.
+- [general] The WebUI is no longer committed into this repository. Its build output can be packaged into the jar on demand with `bootJarWithUi`, or served from a `web` folder next to the jar as before. `bootJar` now builds a jar without the UI, and never requires the AquaViewer build output to be present.
+- [general] Remove the checked-in WebUI build output and the local DIVA scratch dumps (`skin_data.html`, `skin_data.json`, `plate_ids.html`, `skin.csv`, `scripts/`) from the repository, about 100 MB of generated data
 - [general] Enable HTTP response compression (gzip) for JSON, XML, HTML and JS payloads. This noticeably reduces transfer time for large responses such as the music list and the DIVA pv_list.
 - [general] Fix static resource fallback so a missing file no longer returns the index page. Previously this broke deep links and asset requests when the UI was served from the jar.
 - [general] Add Caffeine based caching infrastructure
@@ -19,7 +20,7 @@ All notable changes to this project will be documented in this file.
 - [api] Resolve a display name for each card from its linked game profile (ONGEKI, Maimai, Chunithm, ...) since a card itself has no name
 - [api] Add `PUT api/sega/aime/rebindAccessCode` to re-assign an access code to an existing card, with format check and duplicate detection
 
-### WebUI changes bundled in this release
+### WebUI changes (aqua-viewer repository, packaged by `bootJarWithUi`)
 - Auto-detect the API server endpoint from the page address when the UI is served by aqua-server. The login form is prefilled and only falls back to manual input when the API is hosted elsewhere.
 - Add a card picker to the login page using the local network card list
 - Retry failed preloads with backoff instead of leaving tables empty until a manual reload
@@ -29,6 +30,7 @@ All notable changes to this project will be documented in this file.
 - [diva] Skin picker now lists skin names with a preview image instead of asking for a raw id
 - [diva] Show plate names when editing the nameplate
 - [diva] Add Advanced Profile Settings dialog: sort mode, headphone/button/slider volumes and the per-PV skin, module and SE preferences
+- [diva] Skin and plate previews now read generated catalogs (`skin-previews.json`, `plate-reference.json`) instead of parsing the scraped dumps at runtime. The 37 MB source files are kept out of the repository and out of the build output, regenerate them with `npm run build:diva-reference`.
 - Pin `@angular/cdk`, `@angular/material` and `typescript` to exact versions to keep builds reproducible
 
 ## 0.0.46 - 2023-04-25

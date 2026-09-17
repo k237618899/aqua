@@ -23,9 +23,10 @@ This workspace contains two separate repositories:
 * `aqua-viewer` - the WebUI (AquaViewer), served by this server under `/web/`
 
 ### Web UI
-AquaViewer is embedded into the jar and served under `/web/`, for example `http://localhost/web/`. No extra setup is required.
+AquaViewer is maintained in the separate `aqua-viewer` repository and is not committed here. There are two ways to serve it:
 
-If you want to use your own build instead, put AquaViewer files into a `web` folder next to the jar. That folder takes priority over the embedded copy.
+* Build the jar with the UI embedded (`gradlew bootJarWithUi`), which serves it under `/web/`.
+* Or put AquaViewer files into a `web` folder next to the jar. This needs no repackaging and takes priority over an embedded copy.
 
 Serving can be turned off entirely with `aquaviewer.server.enable=false`.
 
@@ -42,7 +43,7 @@ Requirements:
 
 Run `java -jar aqua-x.x.xx-RELEASE.jar`
 
-Once started, the management UI is reachable at `http://<your-host>/web/`.
+When the WebUI is available (embedded in the jar or placed in a `web` folder), it is reachable at `http://<your-host>/web/`.
 
 By default, Aqua will use sqlite and save user data in data/db.sqlite.
 
@@ -60,23 +61,25 @@ This will be send to the game at booting and being used by following request.
 ### Building
 You need to install JDK 17 on your system. However, you don't need to care about Gradle, as wrapper script is included.
 
-The WebUI is packaged into the jar, so it has to be built first:
+There are two packaging variants:
+
+```
+gradlew clean build      # jar WITHOUT the WebUI
+gradlew bootJarWithUi    # jar WITH the WebUI embedded, named *-with-ui.jar
+```
+
+The `build/libs` folder will contain the jar. `bootJar` does not need the WebUI at all, so it always builds on its own.
+
+`bootJarWithUi` additionally picks up the AquaViewer build output from `../aqua-viewer/dist/aqua-viewer`:
 ```
 cd ../aqua-viewer
 npm install
-npm run build
+npx ng build --configuration=production
 
 cd ../aqua-master
-gradlew clean build
-```
-The `build/libs` folder will contain an jar file.
-
-Any jar build requires `../aqua-viewer/dist/aqua-viewer` to exist. If it is missing, the build stops with a message telling you to run `npm run build` first.
-
-To only package an existing UI build into a single executable jar, use:
-```
 gradlew bootJarWithUi
 ```
+Use the production configuration, plain `ng build` produces an unhashed development bundle. The task stops with an explanatory message when that directory is missing.
 
 ### Credit
 * **samnyan**: The creator and developer of the original Aqua server

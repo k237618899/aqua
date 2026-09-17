@@ -76,3 +76,16 @@ gradle-app.setting
 ### Gradle Patch ###
 # Java heap dump
 *.hprof
+
+### Aqua ###
+## AquaViewer build output. It is produced by ../aqua-viewer and staged into
+## build/generated/aqua-viewer-web at packaging time, never committed here.
+## This must stay after the '!**/src/main/**' negation above to win over it.
+src/main/resources/web/
+
+## Local scratch dumps used to regenerate DIVA game data
+/skin.csv
+/skin_data.html
+/skin_data.json
+/plate_ids.html
+/scripts/

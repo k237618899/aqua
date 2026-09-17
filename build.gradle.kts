@@ -76,45 +76,72 @@ tasks.withType<Javadoc>() {
 }
 
 val aquaViewerDistDir = file("../aqua-viewer/dist/aqua-viewer")
-val embeddedWebDir = file("src/main/resources/web")
+val embeddedWebStagingDir = layout.buildDirectory.dir("generated/aqua-viewer-web")
 
+/**
+ * Stages the AquaViewer build output under build/. The WebUI lives in the
+ * aqua-viewer repository and is never committed here, so this staging directory
+ * is the only way it ends up inside a jar.
+ */
 val syncAquaViewerUi by tasks.registering(Copy::class) {
     group = "build"
-    description = "Copy AquaViewer build output into embedded web resources for jar packaging."
+    description = "Copy AquaViewer build output into a staging directory for jar packaging."
 
     doFirst {
         if (!aquaViewerDistDir.exists()) {
-            throw GradleException("AquaViewer dist not found at ${aquaViewerDistDir.path}. Run npm run build in aqua-viewer first.")
+            throw GradleException(
+                "AquaViewer dist not found at ${aquaViewerDistDir.path}. " +
+                        "Run 'npm run build' in ../aqua-viewer first, or use 'bootJar' for a jar without the WebUI."
+            )
         }
-        delete(embeddedWebDir)
+        // Never let files of an older UI build survive in the staging directory.
+        delete(embeddedWebStagingDir)
     }
 
     from(aquaViewerDistDir)
-    into(embeddedWebDir)
+    into(embeddedWebStagingDir)
     includeEmptyDirs = false
 
     doLast {
-        val embeddedIndex = file("src/main/resources/web/index.html")
-        if (embeddedIndex.exists()) {
-            val content = embeddedIndex.readText(Charsets.UTF_8)
+        val stagedIndex = embeddedWebStagingDir.get().file("index.html").asFile
+        if (stagedIndex.exists()) {
+            val content = stagedIndex.readText(Charsets.UTF_8)
             if (content.contains("<base href=\"/\">")) {
-                embeddedIndex.writeText(content.replace("<base href=\"/\">", "<base href=\"/web/\">"), Charsets.UTF_8)
+                stagedIndex.writeText(content.replace("<base href=\"/\">", "<base href=\"/web/\">"), Charsets.UTF_8)
             }
         }
     }
 }
 
-tasks.named("processResources") {
-    dependsOn(syncAquaViewerUi)
+// The WebUI is produced by ../aqua-viewer, so a stale copy sitting in
+// src/main/resources/web must never sneak into the jar. It is only added back by
+// bootJarWithUi, from the staging directory above.
+tasks.withType<ProcessResources>().configureEach {
+    exclude("web/**")
 }
 
+// Two packaging variants:
+//   gradlew bootJar        - jar WITHOUT the WebUI, serve it from a 'web' folder
+//   gradlew bootJarWithUi  - jar WITH the WebUI embedded under /web/
 tasks.register("bootJarWithUi") {
     group = "build"
-    description = "Build a single executable jar with embedded AquaViewer UI."
+    description = "Build an executable jar with the AquaViewer UI embedded under /web/. Requires ../aqua-viewer/dist/aqua-viewer."
     dependsOn(syncAquaViewerUi)
     dependsOn(tasks.named("bootJar"))
 }
 
 tasks.named<BootJar>("bootJar") {
-    dependsOn(syncAquaViewerUi)
+    description = "Build an executable jar without the AquaViewer UI."
+    mustRunAfter(syncAquaViewerUi)
+}
+
+gradle.taskGraph.whenReady {
+    if (allTasks.any { it.name == "bootJarWithUi" }) {
+        tasks.named<BootJar>("bootJar").configure {
+            from(embeddedWebStagingDir) {
+                into("BOOT-INF/classes/web")
+            }
+            archiveClassifier.set("with-ui")
+        }
+    }
 }
